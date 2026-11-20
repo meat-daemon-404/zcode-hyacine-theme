@@ -1,0 +1,32 @@
+{
+  "name": "zcode-hyacine-theme",
+  "version": "1.1.0",
+  "description": "Hyacine Dusklight (昏光庭院) theme suite: ZCode desktop CDP-injected UI theme + Codex CLI tmTheme + Windows Terminal profile installer (Honkai: Star Rail fan-made)",
+  "license": "MIT",
+  "author": "meat-daemon-404",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meat-daemon-404/zcode-hyacine-theme.git"
+  },
+  "homepage": "https://github.com/meat-daemon-404/zcode-hyacine-theme",
+  "keywords": [
+    "zcode",
+    "codex",
+    "codex-cli",
+    "theme",
+    "tmtheme",
+    "windows-terminal",
+    "honkai-star-rail",
+    "hyacine"
+  ],
+  "files": [
+    "zcode/",
+    "codex/",
+    "icon/",
+    "wallpapers/",
+    "README.md",
+    "README.en.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ]
+}
