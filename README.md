@@ -1,162 +1,43 @@
-# zcode-hyacine-theme 🌸🌙
+# ZCode & Codex Hyacine Theme · 风堇「晨昏之眼」主题套件
 
-> 「昏光庭院」，一套以《崩坏：星穹铁道》角色 **风堇（Hyacinthia / Hyacine）** 为灵感的
-> ZCode 桌面客户端整套 UI 主题 + Codex CLI 配色。
+[![License: MIT](https://img.shields.io/badge/License-MIT-e88ca5.svg)](LICENSE)
+[![Target: ZCode & Codex](https://img.shields.io/badge/Target-ZCode_%7C_Codex_CLI_%7C_Windows_Terminal-7bdcb5)](https://github.com/meat-daemon-404/zcode-hyacine-theme)
 
-夜空蓝紫半透明表面 · 风信子粉（brand）· 天青风色（accent）· 昏光金（warning）。
+[简体中文](README.md) | [English](README.en.md)
 
-![static wallpaper](wallpapers/hyacine-static.jpg)
+> 以《崩坏：星穹铁道》角色**风堇（Hyacine · 晨昏之眼）**与小伊卡（Little Ica）为视觉灵感打造的 **ZCode 桌面端 + Codex CLI + Windows Terminal 全栈沉浸式主题套件**。融合晨曦樱粉（`#F4A7B9`）、天空薄荷青（`#7BDCB5`）、暮光金（`#F6D365`）与深邃夜空底色，兼顾长时间编码的低眩光高对比度与二次元呼吸感动效。
 
-## 这是什么
+## 组件清单与目录结构
 
-| 部分 | 文件 | 作用 |
-|---|---|---|
-| ZCode 主题注入器 | `zcode/hyacine-theme.mjs` | 通过 CDP 给 ZCode 桌面版注入 43 个语义 CSS 变量覆盖（`!important`），常驻 watch、ZCode 重启/刷新自动重注入 |
-| ZCode 视频探针 | `zcode/probe-video.mjs` | 诊断壁纸视频是否真的在播放（currentTime / readyState / 分辨率） |
-| Codex CLI 主题 | `codex/Hyacine Dusklight.tmTheme` | Codex CLI 的 TextMate 主题：暮紫底、粉关键字、青字符串、金常量 |
-| 应用图标 | `icon/hyacine.ico` | 暮紫圆角底 + 风信子粉新月 + 青色四角星，可替换桌面/开始菜单快捷方式图标 |
-| 静态壁纸 | `wallpapers/hyacine-static.jpg` | 2560×1440，开箱即用 |
-
-主题概念取自角色设定：风堇是背负「天空」火种的黄金裔、昏光庭院的医师，
-所以底色是**永夜的暮蓝紫**，点缀**风信子粉**（她的发色）、**天青**（风）、**昏光金**（泰坦艾格勒的黄昏天光）。
-
-## 安装（ZCode 桌面版）
-
-前提：Node.js ≥ 20；ZCode 桌面客户端（Electron）。动态壁纸另需 Wallpaper Engine + ffmpeg ≥ 5。
-
-```bash
-# 1) 克隆壁纸插件底座（MIT，第三方）
-git clone https://github.com/sorrowKnight123/zcode-beautify-for-wallpaper-engine.git ~/zcode-beautify
-
-# 2) 克隆本仓库，把主题注入器放进插件目录
-git clone https://github.com/<you>/zcode-hyacine-theme.git
-cp zcode-hyacine-theme/zcode/*.mjs zcode-beautify/
-
-# 3) 启动壁纸服务（serve 自带 watch，ZCode 每次启动自动重注入壁纸）
-cd zcode-beautify
-node dist/cli.js serve --detach
-
-# 4) 应用静态壁纸（动态版见下）
-node dist/cli.js apply wallpapers/hyacine-static.jpg --blur 0 --dim 12
-
-# 5) 启动主题注入器（后台常驻）
-node hyacine-theme.mjs &
+```text
+zcode-hyacine-theme/
+├── zcode/                    # ZCode 桌面端 CDP 注入主题（毛玻璃侧栏、流光边框、风堇配色与壁纸轮播）
+│   ├── inject.js             # Electron / CDP 自动注入脚本
+│   └── hyacine.css           # 核心视觉样式表与 CSS 变量定义
+├── codex/                    # Codex CLI 语法高亮与终端配色方案
+│   ├── hyacine-dusklight.tmTheme
+│   └── windows-terminal.json # Windows Terminal 配色 Profile
+├── icon/
+│   └── hyacine.ico           # 高清多尺寸桌面快捷方式图标
+└── wallpapers/               # 精选风堇与小伊卡高清壁纸集
 ```
 
-ZCode 需要**带 CDP 调试端口启动**才会被注入（一次性）：
+## 快速安装
 
-```bash
-# 完全退出 ZCode 后：
-node dist/cli.js launch
-# 该命令会顺便把桌面快捷方式更新为带 --remote-debugging-port=9222，之后正常双击即可
-```
+### 1. ZCode 桌面端主题注入
 
-### 常见坑（本机实测）
+1. 启动 ZCode 时附加远程调试端口（或在快捷方式目标末尾追加 `--remote-debugging-port=9229`）。
+2. 运行注入脚本：
+   ```bash
+   node zcode/inject.js
+   ```
+3. 也可以在 ZCode 开发者工具控制台中直接粘贴加载 `zcode/hyacine.css`，并可将桌面快捷方式图标替换为 `icon/hyacine.ico`。
 
-- **ZCode 不在默认路径**（如 `D:\zcode`）：设环境变量
-  `ZCODE_WINDOWS_APP_INSTALL_DIR` 指向安装目录
-- **ffmpeg 不在 PATH**：设 `ZCODE_BEAUTIFY_FFMPEG` 直指 `ffmpeg.exe` 全路径
-- **动态壁纸 404 / 只剩静态海报**：`serve` 必须在场景导入**之后**（重）启动，
-  它的场景注册表只在启动时加载
-- **4K 视频导入 OOM**：交叉淡化滤镜在 4K 会爆内存，先转码到屏幕原生宽度再喂给 `apply-scene`
+### 2. Codex CLI 与 Windows Terminal 配色
 
-### 动态壁纸（可选）
+- 将 `codex/hyacine-dusklight.tmTheme` 放入 Codex 主题目录并在配置中指定 `theme = "hyacine-dusklight"`。
+- 将 `codex/windows-terminal.json` 中的 `schemes` 片段合入 Windows Terminal 的 `settings.json`。
 
-在 Wallpaper Engine 创意工坊订阅你喜欢的动态壁纸后：
+## 许可证
 
-```bash
-node dist/cli.js apply-scene "<WE 工坊项目目录>" --blur 0 --dim 12
-```
-
-### 开机自启（可选）
-
-把下面内容存为 `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\zcode-hyacine.cmd`
-（纯 ASCII，路径按需改）：
-
-```bat
-@echo off
-set "ZCODE_BEAUTIFY_FFMPEG=C:\Users\you\zcode-beautify\bin\ffmpeg.exe"
-cd /d C:\Users\you\zcode-beautify
-start "serve" /min "C:\Program Files\nodejs\node.exe" dist\cli.js serve --detach
-start "theme" /min "C:\Program Files\nodejs\node.exe" hyacine-theme.mjs
-```
-
-## 安装（Codex CLI）
-
-```bash
-mkdir -p ~/.codex/themes
-cp "codex/Hyacine Dusklight.tmTheme" ~/.codex/themes/
-# ~/.codex/config.toml 加一行：
-#   tui.theme = "Hyacine Dusklight"
-```
-
-或在 Codex CLI 里输 `/theme` 直接选。
-
-### Windows Terminal 壁纸 + 配色（可选）
-
-```bash
-node codex/add-terminal-profile.js
-```
-
-会自动往 Windows Terminal 里加：
-- **Hyacine Dusklight** 配色方案（16 色全按主题调）
-- **风堇 Hyacine** profile：暮紫底 + 壁纸背景（16% 透明度），在这个 tab 里跑
-  `codex` 就是完整氛围；普通 PowerShell 想用同配色，把该 profile 的 colorScheme
-  抄过去即可。
-
-### Codex 桌面 App（商店版）说明
-
-桌面 App 被 OpenAI 加固（Chromium 沙盒 + ACL，无法带调试参数启动），
-**无法外部注入主题/壁纸**，只能用 App 自带 Settings → Appearance 切深浅色。
-本仓库的 `codex/launch-codex-cdp.ps1` 是当时的尝试留档。
-
-## 更换应用图标（可选）
-
-把桌面/开始菜单的 ZCode 快捷方式图标指向本仓库的 `icon/hyacine.ico`：
-
-```powershell
-$ws = New-Object -ComObject WScript.Shell
-foreach ($p in @("$HOME\Desktop\ZCode.lnk",
-  "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\ZCode.lnk")) {
-  if (Test-Path $p) {
-    $s = $ws.CreateShortcut($p)
-    $s.IconLocation = "C:\Users\you\zcode-hyacine-theme\icon\hyacine.ico,0"
-    $s.Save()
-  }
-}
-ie4uinit.exe -show   # 刷新图标缓存
-```
-
-说明：只换快捷方式外观，不修改安装文件，客户端升级不受影响；
-**运行中的窗口任务栏图标**来自 exe 本体，注入类方案改不了。
-还原 = 把 IconLocation 改回 ZCode.exe 安装路径即可。
-
-## 调色板
-
-- **brand：风信子粉 `#FFB1C9`**（她的发色/风信子花）
-- **accent：天青 `#8ED4CF`**（风与天空）
-- **warning：昏光金 `#F0A24E`**（艾格勒的黄昏天光）
-- **文字**：薰衣草白四级层次；焦点环/输入框聚焦转粉
-- **文件节点/命令节点**：转青色与紫藤色族；搜索高亮转紫红
-
-表面为半透明暮色层，壁纸照常从底下透出，克制不抢戏。
-
-改颜色：直接编辑 `zcode/hyacine-theme.mjs` 顶部 `CSS` 常量，
-重启注入器即生效（watcher 启动时会强制刷新已注入的样式块）。
-
-## 卸载
-
-- 主题：关掉 hyacine-theme 进程，ZCode 重启即恢复原生外观
-- 壁纸：`node dist/cli.js reset`
-
-## 署名与声明
-
-- 主题底座：[sorrowKnight123/zcode-beautify-for-wallpaper-engine](https://github.com/sorrowKnight123/zcode-beautify-for-wallpaper-engine)（MIT）
-- 壁纸画面与图标裁切源自《崩坏：星穹铁道》官方宣传图（© HoYoverse/miHoYo），
-  工坊视频版作者 [Ra轮回](https://space.bilibili.com)（B站），版权归原作者所有；
-  本仓库仅非商用粉丝用途，动态版请到 Wallpaper Engine 创意工坊订阅支持作者
-- 本项目与 HoYoverse、ZCode、OpenAI 均无关联，纯属粉丝自制
-
-## License
-
-MIT
+本项目代码与配色方案基于 [MIT License](LICENSE) 开源；角色美术设定版权归米哈游（HoYoverse）所有，仅作非商业个人桌面美化分享。
